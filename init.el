@@ -11,7 +11,18 @@
 ;; (package-refresh-contents)
 
 ;; パッケージの自動インストール
-(package-install 'use-package)
+(package-install 'use-package) ;; package controller
+;; (package-install 'powerline) ;; power line
+;; (package-install 'tabbar) ;; tab system
+(package-install 'python-mode)
+(package-install 'jedi)
+(package-install 'company)
+(package-install 'irony)
+
+
+
+;; theme setting
+(load-theme 'tsdh-light t)
 
 ;; Encoding settings
 (set-default-coding-systems 'utf-8)
@@ -40,7 +51,6 @@
 (setq frame-title-format
       (format "%%f - Emacs@%s" (system-name)))
 
-
 ;; <apt install emacs-mozc>が必須
 (use-package mozc
   :config
@@ -55,6 +65,59 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
+;; フォント設定
+;; fc-listの出力、ファイル名じゃないアルファベットのところを書くっぽい
+;; https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
+;; これを落として、fc-cache、後でないと有効化されない
+(set-default-font "Source Han Sans HW Regular")
+
+
+;; Python mode config
+(use-package python-mode
+  :mode
+  (("\\.py\\'" . python-mode))
+  )
+;; JEDI
+;; vertual env のインストールが必要
+;; インストール後: M-x jedi:install-server を実行する
+(use-package jedi
+  :config
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)
+  )
+
+;; 1. install llvm-dev, clang, libclang-dev, cmake
+;; 2. company-mode, irony-mode, の導入
+(use-package company ;;company settings
+  :config
+  (global-company-mode 1)
+  (global-set-key (kbd "C-M-i") 'company-complete)
+  ;; (setq company-idle-delay nil) ; 自動補完をしない
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-search-map (kbd "C-n") 'company-select-next)
+  (define-key company-search-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
+(use-package irony ;;irony settings
+  :config
+  (progn
+     (custom-set-variables '(irony-additional-clang-options '("-std=c++11")))
+     (add-to-list 'company-backends 'company-irony)
+     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+     (add-hook 'c-mode-common-hook 'irony-mode)
+     (add-hook 'c++-mode-hook 'irony-mode)
+     )
+  )
+  
+
+;; (eval-after-load "irony"
+;;   '(progn
+;;      (custom-set-variables '(irony-additional-clang-options '("-std=c++11")))
+;;      (add-to-list 'company-backends 'company-irony)
+;;      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;;      (add-hook 'c-mode-common-hook 'irony-mode)))
+
+
 
 
 
@@ -63,6 +126,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(irony-additional-clang-options (quote ("-std=c++11")))
  '(package-selected-packages (quote (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
