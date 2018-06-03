@@ -12,14 +12,12 @@
 
 ;; パッケージの自動インストール
 (package-install 'use-package) ;; package controller
-;; (package-install 'powerline) ;; power line
-;; (package-install 'tabbar) ;; tab system
 (package-install 'python-mode)
 (package-install 'jedi)
 (package-install 'company)
 (package-install 'irony)
-
-
+(package-install 'helm)
+(package-install 'markdown-mode)
 
 ;; theme setting
 (load-theme 'tsdh-light t)
@@ -108,17 +106,37 @@
      (add-hook 'c++-mode-hook 'irony-mode)
      )
   )
-  
 
-;; (eval-after-load "irony"
-;;   '(progn
-;;      (custom-set-variables '(irony-additional-clang-options '("-std=c++11")))
-;;      (add-to-list 'company-backends 'company-irony)
-;;      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-;;      (add-hook 'c-mode-common-hook 'irony-mode)))
+;; Helm settings
+(use-package helm-config
+  :config
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t
+      helm-echo-input-in-header-line t)
+  (setq helm-buffers-fuzzy-matching t
+	helm-recentf-fuzzy-match    t)
+  (helm-mode 1)
+  )
+
+;; markdown-mode config
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 
-
+;; buffer view control
+;; 前のbufferに戻る
+(global-set-key (kbd "C-S-<iso-lefttab>") 'switch-to-prev-buffer)
+;; 次のバッファに進む
+(global-set-key [C-tab] 'switch-to-next-buffer)
 
 
 (custom-set-variables
