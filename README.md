@@ -11,6 +11,7 @@ ln -s ~/dotfiles ~/.emacs.d/init.el
 1. Apt operation
 ``` bash
 sudo apt install emacs-mozc llvm-dev clang libclang-dev cmake
+pip isntall virtualenv
 ```
 
 2. Install SourceHansansHWJ
