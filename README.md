@@ -14,10 +14,10 @@ sudo apt install emacs-mozc llvm-dev clang libclang-dev cmake
 ```
 
 2. Install SourceHansansHWJ
-2.1. Download https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
-2.2. unzip
-2.3. cp *.otf ~/.fonts
-2.4. fc-cache
+   1. Download https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
+   2. unzip
+   3. cp *.otf ~/.fonts
+   4. fc-cache
 
 3. Emacs operation
 ``` emacs-lisp
