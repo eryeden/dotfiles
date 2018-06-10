@@ -20,6 +20,7 @@
 (package-install 'markdown-mode)
 (package-install 'cmake-mode)
 (package-install 'tabbar)
+(package-install 'flycheck)
 
 ;; theme setting
 (load-theme 'tsdh-light t)
@@ -140,6 +141,12 @@
 ;; https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
 ;; これを落として、fc-cache、後でないと有効化されない
 (set-default-font "Source Han Sans HW Regular 10")
+
+;; flycheck
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
 
 
 ;; Python mode config
