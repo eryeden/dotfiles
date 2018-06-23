@@ -25,7 +25,7 @@ def GetContainerStatus(name):
     return contaier_status
     
 
-def GenerateContainer(image_name, container_name):
+def GenerateContainer(image_name, container_name, host_name):
     cmd = 'docker run -it '\
     '--user=$(id -u):$(id -g) '\
     '$(for i in $(id -G); do echo -n " --group-add "$i; done) '\
@@ -41,7 +41,9 @@ def GenerateContainer(image_name, container_name):
     '--volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" '\
     '--runtime=nvidia '\
     '--name='
-    cmd = cmd + '"' + container_name + '" ' + image_name
+    cmd = cmd + '"' + container_name + '" ' # add container name
+    cmd = cmd + ' --hostname=' + '"'+ host_name +'"'
+    cmd = cmd + " " + image_name
     print(cmd)
     res = subprocess.call(cmd, shell=True)
 
@@ -56,7 +58,9 @@ def StartContainer(container_name):
     res = subprocess.call(cmd, shell=True)
 
 
+
 container_name = 'kinetic_nvidia_test1'
+container_hostname = 'kinetic_nvidia_test1'
 iamge_name = "my_kinetic_nvidia:latest"
 status = GetContainerStatus(container_name)
 
@@ -72,7 +76,7 @@ elif(status == ContainerStatus.EXITED):
     pass
 elif(status == ContainerStatus.NOT_EXIST):
     # コンテナがないとき：コンテナを生成、bash起動
-    GenerateContainer(iamge_name, container_name)
+    GenerateContainer(iamge_name, container_name, container_hostname)
     pass
 else:
     pass

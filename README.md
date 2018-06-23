@@ -6,6 +6,12 @@
 ln -s ~/dotfiles ~/.emacs.d/init.el
 ```
 
+## .bashrc
+1. Add bashrc.bash to ~/.bashrc
+``` bash
+echo "source $HOME/dotfiles/bashrc.bash" >> ~/.bashrc
+```
+
 ## Emacs: init.el
 ### Pre-installation process
 1. Apt operation

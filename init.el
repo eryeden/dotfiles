@@ -172,6 +172,7 @@
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'cmake-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (add-hook 'shell-script-mode-hook 'company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; (setq company-idle-delay nil) ; 自動補完をしない
   (define-key company-active-map (kbd "C-n") 'company-select-next)
