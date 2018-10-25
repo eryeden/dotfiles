@@ -21,6 +21,7 @@
 (package-install 'cmake-mode)
 (package-install 'tabbar)
 (package-install 'flycheck)
+(package-install 'dockerfile-mode)
 
 ;; theme setting
 (load-theme 'tsdh-light t)
@@ -107,18 +108,19 @@
    :box nil
    )
   ;;----- 表示するバッファ
+  ;; タブに表示させるバッファの設定
   (defun my-tabbar-buffer-list ()
     (delq nil
-	  (mapcar #'(lambda (b)
-		      (cond
-		       ;; Always include the current buffer.
-		       ((eq (current-buffer) b) b)
-		       ((buffer-file-name b) b)
-		       ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-		       ((equal "*scratch*" (buffer-name b)) b) ; *scratch*バッファは表示する
-		       ((char-equal ?* (aref (buffer-name b) 0)) nil) ; それ以外の * で始まるバッファは表示しない
-		       ((buffer-live-p b) b)))
-		  (buffer-list))))
+  	  (mapcar #'(lambda (b)
+  		      (cond
+  		       ;; Always include the current buffer.
+  		       ((eq (current-buffer) b) b)
+  		       ((buffer-file-name b) b)
+  		       ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+  		       ((equal "*scratch*" (buffer-name b)) b) ; *scratch*バッファは表示する
+  		       ((char-equal ?* (aref (buffer-name b) 0)) nil) ; それ以外の * で始まるバッファは表示しない
+  		       ((buffer-live-p b) b)))
+  		  (buffer-list))))
   (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
   )
 
@@ -173,6 +175,7 @@
   (add-hook 'cmake-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'shell-script-mode-hook 'company-mode)
+  (add-hook 'nxml-mode-hook 'company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; (setq company-idle-delay nil) ; 自動補完をしない
   (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -192,6 +195,7 @@
   )
 
 ;; Helm settings
+
 (use-package helm-config
   :config
   (global-set-key (kbd "C-x b") 'helm-mini)
@@ -206,6 +210,8 @@
   (helm-mode 1)
   )
 
+
+
 ;; markdown-mode config
 (use-package markdown-mode
   :ensure t
@@ -218,6 +224,59 @@
 (use-package cmake-mode
   :mode (("\\.cmake\\'" . cmake-mode)
 	 ("CMakeLists\\.txt\\'" . cmake-mode)))
+
+;; Dockerfile
+(use-package dockerfile-mode
+  :config
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  )
+
+;; XML-mode
+(use-package nxml-mode
+  :mode
+  (("\.xml$" . nxml-mode)
+   ("\.xsl$" . nxml-mode)
+   ("\.xhtml$" . nxml-mode)
+   ("\.page$" . nxml-mode))
+  :config
+  ;; (setq nxml-child-indent 2)                  ; タグのインデント幅
+  ;; (setq nxml-attribute-indent 2)              ; 属性のインデント幅
+  ;; (setq indent-tabs-mode nil)
+  ;; (setq nxml-slash-auto-complete-flag t)      ; </の入力で閉じタグを補完する
+  ;; (setq tab-width 2)
+  (add-hook 'nxml-mode-hook
+          (lambda ()
+            ;; 更新タイムスタンプの自動挿入
+            (setq time-stamp-line-limit 10000)
+            (if (not (memq 'time-stamp write-file-hooks))
+                (setq write-file-hooks
+                      (cons 'time-stamp write-file-hooks)))
+            (setq time-stamp-format "%3a %3b %02d %02H:%02M:%02S %:y %Z")
+            (setq time-stamp-start "Last modified:[ \t]")
+            (setq time-stamp-end "$")
+            ;;
+            (setq auto-fill-mode -1)
+            (setq nxml-slash-auto-complete-flag t)      ; スラッシュの入力で終了タグを自動補完
+            (setq nxml-child-indent 2)                  ; タグのインデント幅
+            (setq nxml-attribute-indent 4)              ; 属性のインデント幅
+            (setq indent-tabs-mode t)
+            (setq nxml-bind-meta-tab-to-complete-flag t) 
+            (setq nxml-slash-auto-complete-flag t)      ; </の入力で閉じタグを補完する
+            (setq nxml-sexp-element-flag t)             ; C-M-kで下位を含む要素全体をkillする
+            (setq nxml-char-ref-display-glyph-flag nil) ; グリフは非表示
+            (setq tab-width 4)))
+  
+  (custom-set-faces
+  ;; custom-set-faces was added by Custom -- don't edit or cut/paste it!
+  ;; Your init file should contain only one such instance.
+   '(nxml-comment-content-face ((t (:foreground "yellow4"))))
+   '(nxml-comment-delimiter-face ((t (:foreground "yellow4"))))
+   '(nxml-delimited-data-face ((t (:foreground "lime green"))))
+   '(nxml-delimiter-face ((t (:foreground "grey"))))
+   '(nxml-element-local-name-face ((t (:inherit nxml-name-face :foreground "medium turquoise"))))
+   '(nxml-name-face ((t (:foreground "rosy brown"))))
+   '(nxml-tag-slash-face ((t (:inherit nxml-name-face :foreground "grey")))))
+)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -232,3 +291,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'dired-find-alternate-file 'disabled nil)
