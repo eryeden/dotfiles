@@ -26,6 +26,12 @@ pip isntall virtualenv
    2. unzip
    3. cp *.otf ~/.fonts
    4. sudo fc-cache -fv
+   
+#### To inspect font name
+
+``` bash
+fc-list | grep Han
+```
 
 3. Emacs operation
 ``` emacs-lisp
