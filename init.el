@@ -142,7 +142,8 @@
 ;; fc-listの出力、ファイル名じゃないアルファベットのところを書くっぽい
 ;; https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
 ;; これを落として、fc-cache、後でないと有効化されない
-(set-default-font "Source Han Sans HW Regular 10")
+;;(set-default-font "Source Han Sans HWJ")
+(set-default-font "Source Han Sans HW 10")
 
 ;; flycheck
 (use-package flycheck

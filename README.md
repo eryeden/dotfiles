@@ -3,7 +3,8 @@
 
 * Emacs
 ``` bash
-ln -s ~/dotfiles ~/.emacs.d/init.el
+cd ~/.emacs.d/init.el
+ln -s ~/dotfiles/init.el .
 ```
 
 ## .bashrc
@@ -16,7 +17,7 @@ echo "source $HOME/dotfiles/bashrc.bash" >> ~/.bashrc
 ### Pre-installation process
 1. Apt operation
 ``` bash
-sudo apt install emacs-mozc llvm-dev clang libclang-dev cmake
+sudo apt install emacs-mozc-bin llvm-dev clang libclang-dev cmake
 pip isntall virtualenv
 ```
 
@@ -24,7 +25,7 @@ pip isntall virtualenv
    1. Download https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWJ.zip
    2. unzip
    3. cp *.otf ~/.fonts
-   4. fc-cache
+   4. sudo fc-cache -fv
 
 3. Emacs operation
 ``` emacs-lisp
